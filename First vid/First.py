@@ -28,8 +28,10 @@ if max_val >= threshold:
     target_w = target_img.shape[1]
     target_h = target_img.shape[0]
 
-    # Idk why top_left was assigned max_loc
+    # Idk why top_left was assigned max_loc, just guessing that max_loc returns the top left corner of a match
     top_left = max_loc
+
+    # Assign the bottom x and y coordinates using the previous values
     bottom_right = (top_left[0] + target_w, top_left[1] + target_h)
 
     # Draw a box around the target image
@@ -42,10 +44,15 @@ if max_val >= threshold:
         lineType=cv.LINE_4,
     )
 
+    """
     # Display the result
     cv.imshow("Result", source_img)
 
     # Pauses the code until we press a key
     cv.waitKey()
+    """
+
+    # Create the resulting image with the best match
+    cv.imwrite("Result.jpg", source_img)
 else:
     print("No good match")
