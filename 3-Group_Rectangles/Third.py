@@ -20,6 +20,13 @@ rectangles = []
 for loc in locations:
     rect = [int(loc[0]), int(loc[1]), target_w, target_h]
     rectangles.append(rect)
+
+
+# Group the rectangles together from the given list,
+# set the groupThreshold to 1 because 0 doesn't group any rectangles together, 2 or 3 require more overlapping rectangles to be effective,
+# set the eps to 0.5 as a baseline number to judge how close the rectangles need to be in order to group them together,
+# reassign the grouped up rectangles to the original rectangles list but "weights" won't be used
+rectangles, weights = cv.groupRectangles(rectangles, 1, 0.5)
 print("Rectangles", rectangles)
 
 # Checking the truth value of a list with multiple values is ambiguous, so it was replaced
