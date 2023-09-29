@@ -19,6 +19,10 @@ locations = list(zip(*locations[::-1]))
 rectangles = []
 for loc in locations:
     rect = [int(loc[0]), int(loc[1]), target_w, target_h]
+    # Since the following function groupRectangles require at least two boxes to be considered as a "grouped" item,
+    # a single rectangle will be added in twice, so the function groupRectangles will actually group up the two same single
+    # boxes as a real result, instead of throwing it out
+    rectangles.append(rect)
     rectangles.append(rect)
 
 
