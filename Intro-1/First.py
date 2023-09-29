@@ -1,4 +1,4 @@
-#! C:\Users\leota\Desktop\OpenCV Object Detection\First vid\myenv\Scripts\python.exe
+#! C:\Users\leota\Desktop\OpenCV Object Detection\myenv\Scripts\python.exe
 import cv2 as cv
 import numpy as np
 
