@@ -3,9 +3,7 @@ import cv2 as cv
 import numpy as np
 
 
-def findClickPositions(
-    source_img_path, target_img_path, threshold=0.5, debug_mode=None
-):
+def findClickPositions(target_img_path, source_img_path, threshold, debug_mode=None):
     source_img = cv.imread(source_img_path, cv.IMREAD_UNCHANGED)
     target_img = cv.imread(target_img_path, cv.IMREAD_UNCHANGED)
 
@@ -70,7 +68,15 @@ def findClickPositions(
     return points
 
 
-source_img_loc = "TheRange.jpg"
 target_img_loc = "Bot.jpg"
-points = findClickPositions(source_img_loc, target_img_loc, debug_mode="points")
+source_img_loc = "TheRange.jpg"
+set_threshold = 0.65
+"""
+points = findClickPositions(
+    target_img_loc, source_img_loc, set_threshold, debug_mode="points"
+)
+"""
+points = findClickPositions(
+    target_img_loc, source_img_loc, set_threshold, debug_mode="rectangles"
+)
 print(points)
