@@ -37,21 +37,24 @@ print("Rectangles", rectangles)
 # with checking the length of a list
 if len(rectangles):
     print("Found good matches")
-
     line_color = (0, 255, 0)
     line_type = cv.LINE_4
+    marker_color = (255, 0, 255)
+    marker_type = cv.MARKER_CROSS
 
     for x, y, w, h in rectangles:
+        """
         top_left = (x, y)
-
         bottom_right = (x + w, y + h)
-
         cv.rectangle(source_img, top_left, bottom_right, line_color, line_type)
+        """
+        # Locate the center of each rectangle and draw a cross for each of them
+        center_x = x + int(w / 2)
+        center_y = y + int(h / 2)
+        cv.drawMarker(source_img, (center_x, center_y), marker_color, marker_type)
 
     cv.imshow("Result", source_img)
-
     cv.waitKey()
-
     cv.imwrite("Result.jpg", source_img)
 else:
     print("No good matches")
