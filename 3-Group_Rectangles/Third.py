@@ -63,7 +63,7 @@ def findClickPositions(target_img_path, source_img_path, threshold, debug_mode=N
         if debug_mode:
             cv.imshow("Result", source_img)
             cv.waitKey()
-            cv.imwrite("Result.jpg", source_img)
+            # cv.imwrite("Result.jpg", source_img)
 
     return points
 
