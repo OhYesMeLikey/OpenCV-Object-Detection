@@ -15,7 +15,8 @@ wincap = WindowCapture("VALORANT  ")
 loop_time = time()
 while True:
     # Obtains a screenshot from get_screenshot() that open cv can use right away
-    screenshot = wincap.capture_win_alt()
+    # screenshot = wincap.capture_win_alt()
+    screenshot = wincap.get_screenshot()
 
     cv.imshow("Computer Vision", screenshot)
 
