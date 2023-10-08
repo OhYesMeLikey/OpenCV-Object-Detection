@@ -1,4 +1,5 @@
 import numpy as np
+from ctypes import windll
 import win32gui, win32ui, win32con
 
 
@@ -15,10 +16,52 @@ class WindowCapture:
         if not self.hwnd:
             raise Exception("Window not found: {}".format(window_name))
 
-        # get the window size
+        self.w = 1920
+        self.h = 1080
+
+        """# get the window size
         window_rect = win32gui.GetWindowRect(self.hwnd)
         self.w = window_rect[2] - window_rect[0]
-        self.h = window_rect[3] - window_rect[1]
+        self.h = window_rect[3] - window_rect[1]"""
+
+    def capture_win_alt(self):
+        # Adapted from https://stackoverflow.com/questions/19695214/screenshot-of-inactive-window-printwindow-win32gui
+
+        windll.user32.SetProcessDPIAware()
+        # hwnd = win32gui.FindWindow(None, window_name)
+
+        left, top, right, bottom = win32gui.GetClientRect(self.hwnd)
+        self.w = right - left
+        self.h = bottom - top
+
+        hwnd_dc = win32gui.GetWindowDC(self.hwnd)
+        mfc_dc = win32ui.CreateDCFromHandle(hwnd_dc)
+        save_dc = mfc_dc.CreateCompatibleDC()
+        bitmap = win32ui.CreateBitmap()
+        bitmap.CreateCompatibleBitmap(mfc_dc, self.w, self.h)
+        save_dc.SelectObject(bitmap)
+
+        # If Special K is running, this number is 3. If not, 1
+        result = windll.user32.PrintWindow(self.hwnd, save_dc.GetSafeHdc(), 3)
+
+        bmpinfo = bitmap.GetInfo()
+        bmpstr = bitmap.GetBitmapBits(True)
+
+        img = np.frombuffer(bmpstr, dtype=np.uint8).reshape(
+            (bmpinfo["bmHeight"], bmpinfo["bmWidth"], 4)
+        )
+        img = np.ascontiguousarray(img)[
+            ..., :-1
+        ]  # make image C_CONTIGUOUS and drop alpha channel
+
+        if not result:  # result should be 1
+            win32gui.DeleteObject(bitmap.GetHandle())
+            save_dc.DeleteDC()
+            mfc_dc.DeleteDC()
+            win32gui.ReleaseDC(self.hwnd, hwnd_dc)
+            raise RuntimeError(f"Unable to acquire screenshot! Result: {result}")
+
+        return img
 
     def get_screenshot(self):
         # Get the window image data
