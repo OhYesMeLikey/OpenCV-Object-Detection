@@ -9,7 +9,8 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 # Create an object from the WindowCapture class
 # For valorant, there are two spaces after the name
-wincap = WindowCapture("VALORANT  ")
+# wincap = WindowCapture("VALORANT  ")
+wincap = WindowCapture()
 
 # Marks down the current time before entering the loop.
 loop_time = time()

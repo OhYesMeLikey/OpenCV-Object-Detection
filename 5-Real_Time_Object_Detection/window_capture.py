@@ -4,7 +4,7 @@ import win32gui, win32ui, win32con
 
 
 class WindowCapture:
-    # Class properties
+    # properties
     w = 0
     h = 0
     hwnd = None
@@ -13,15 +13,15 @@ class WindowCapture:
     offset_x = 0
     offset_y = 0
 
-    # Constructor
-    def __init__(self, window_name):
-        # Find the handle for the window that we want to capture
-        self.hwnd = win32gui.FindWindow(None, window_name)
-        if not self.hwnd:
-            raise Exception("Window not found: {}".format(window_name))
-
-        self.w = 1920
-        self.h = 1080
+    # constructor
+    def __init__(self, window_name=None):
+        if window_name is None:
+            self.hwnd = win32gui.GetDesktopWindow()
+        else:
+            # find the handle for the window we want to capture
+            self.hwnd = win32gui.FindWindow(None, window_name)
+            if not self.hwnd:
+                raise Exception("Window not found: {}".format(window_name))
 
         # get the window size
         window_rect = win32gui.GetWindowRect(self.hwnd)
@@ -42,16 +42,13 @@ class WindowCapture:
         self.offset_y = window_rect[1] + self.cropped_y
 
     def get_screenshot(self):
-        windll.user32.SetProcessDPIAware()
-
-        # Get the window image data
+        # get the window image data
         wDC = win32gui.GetWindowDC(self.hwnd)
         dcObj = win32ui.CreateDCFromHandle(wDC)
         cDC = dcObj.CreateCompatibleDC()
         dataBitMap = win32ui.CreateBitmap()
         dataBitMap.CreateCompatibleBitmap(dcObj, self.w, self.h)
         cDC.SelectObject(dataBitMap)
-        # cDC.BitBlt((0, 0), (self.w, self.h), dcObj, (0, 0), win32con.SRCCOPY)
         cDC.BitBlt(
             (0, 0),
             (self.w, self.h),
@@ -60,12 +57,13 @@ class WindowCapture:
             win32con.SRCCOPY,
         )
 
-        # Save the screenshot
+        # convert the raw data into a format opencv can read
+        # dataBitMap.SaveBitmapFile(cDC, 'debug.bmp')
         signedIntsArray = dataBitMap.GetBitmapBits(True)
         img = np.fromstring(signedIntsArray, dtype="uint8")
         img.shape = (self.h, self.w, 4)
 
-        # Free Resources
+        # free resources
         dcObj.DeleteDC()
         cDC.DeleteDC()
         win32gui.ReleaseDC(self.hwnd, wDC)
@@ -135,6 +133,7 @@ class WindowCapture:
     # Find the name of the window you're interested in.
     # Once you have it, update window_capture().
     # https://stackoverflow.com/questions/55547940/how-to-get-a-list-of-the-name-of-every-open-window
+    @staticmethod
     def list_window_names(self):
         def winEnumHandler(hwnd, ctx):
             if win32gui.IsWindowVisible(hwnd):
