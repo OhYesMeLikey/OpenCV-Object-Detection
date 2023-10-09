@@ -15,13 +15,13 @@ wincap = WindowCapture("VALORANT  ")
 loop_time = time()
 while True:
     # Obtains a screenshot from get_screenshot() that open cv can use right away
-    # screenshot = wincap.capture_win_alt()
-    screenshot = wincap.get_screenshot()
+    screenshot = wincap.capture_win_alt()
+    # screenshot = wincap.get_screenshot()
 
     cv.imshow("Computer Vision", screenshot)
 
     # Prints out the FPS.
-    # print("FPS {}".format(1 / (time() - loop_time)))
+    print("FPS {}".format(1 / (time() - loop_time)))
     loop_time = time()
 
     # Press 'q' with the output window focused to exit.

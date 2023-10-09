@@ -113,13 +113,19 @@ class WindowCapture:
 
         bmpinfo = bitmap.GetInfo()
         bmpstr = bitmap.GetBitmapBits(True)
+        img = np.fromstring(bmpstr, dtype="uint8")
+        img.shape = (self.h, self.w, 4)
 
-        img = np.frombuffer(bmpstr, dtype=np.uint8).reshape(
+        img = img[..., :3]
+        img = np.ascontiguousarray(img)
+
+        """img = np.frombuffer(bmpstr, dtype=np.uint8).reshape(
             (bmpinfo["bmHeight"], bmpinfo["bmWidth"], 4)
         )
         img = np.ascontiguousarray(img)[
             ..., :-1
         ]  # make image C_CONTIGUOUS and drop alpha channel
+        """
 
         if not result:  # result should be 1
             win32gui.DeleteObject(bitmap.GetHandle())
