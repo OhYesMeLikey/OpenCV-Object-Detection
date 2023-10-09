@@ -3,7 +3,7 @@ import numpy as np
 import os
 from time import time
 from window_capture import WindowCapture
-from vision import findClickPositions
+from vision import Vision
 
 # Changes the working directory to the folder that this script is in.
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
@@ -12,6 +12,7 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))
 # For valorant, there are two spaces after the name
 wincap = WindowCapture("VALORANT  ")
 # wincap = WindowCapture()
+vision_bot = Vision("Bot.jpg")
 
 # Marks down the current time before entering the loop.
 loop_time = time()
@@ -20,8 +21,8 @@ while True:
     screenshot = wincap.capture_win_alt()
     # screenshot = wincap.get_screenshot()
 
-    # cv.imshow("Computer Vision", screenshot)
-    findClickPositions("Bot.jpg", screenshot, 0.5, "rectangles")
+    # Display the processed image
+    vision_bot.find(screenshot, 0.5, "rectangles")
 
     # Prints out the FPS.
     print("FPS {}".format(1 / (time() - loop_time)))
